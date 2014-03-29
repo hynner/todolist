@@ -1,0 +1,14 @@
+log/*
+temp/*
+vendor/*
+!vendor/others
+nbproject/
+nbproject/*
+bin/
+tests/ExampleTest.phpt
+composer.lock
+.DS_Store
+!.gitignore
+!.htaccess
+!web.config
+app/config/config.local.neon

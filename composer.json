@@ -1,0 +1,16 @@
+{
+	"name": "todo-list",
+	"description": "Simple TODO-list built with Nette",
+	"type": "project",
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "hynner"
+		}
+	],
+	"require": {
+		"php": ">= 5.3.7",
+		"nette/nette": "~2.1.0",
+		"kdyby/bootstrap-form-renderer": "2.0.*"
+	}
+}
