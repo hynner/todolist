@@ -11,10 +11,25 @@ use Nette,
  */
 class TaskPresenter extends BasePresenter
 {
-
-	public function renderDefault()
+	/** @var string table name */
+	private $table = "tasks";
+	public function renderList()
 	{
-		$this->template->anyVariable = 'any value';
+		$this->template->tasks = $this->db->table($this->table)
+				->where("id_parent IS NULL")
+				->order("priority ASC, name ASC")->fetchPairs("id_task");
 	}
+	public function createComponentTaskEditForm() {
+		$form =  new \TaskEditForm();
+		$form->onSuccess[] = $this->taskEditFormSubmitted;
+		return $form;
+	}
+	public function taskEditFormSubmitted($form)
+	{
+		$values = $form->getValues();
+		$this->db->table($this->table)->insert($values);
+		$this->redirect("list");
+	}
+	
 
 }

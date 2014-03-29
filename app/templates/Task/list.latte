@@ -1,0 +1,25 @@
+{block content}
+	<h1>Task list</h1>
+	<a n:href="Task:add" title="New task" class="btn-default btn">New task</a>
+	{if !empty($tasks)}
+		<table class="table">
+			<caption>Tasks</caption>
+			<tr>
+				<th>ID</th>
+				<th>Priority</th>
+				<th>Name</th>
+				<th>Actions</th>
+			</tr>
+			{foreach $tasks as $id => $task}
+				<tr>
+					<td>{$task->id_task}</td>
+					<td>{$task->priority}</td>
+					<td>{$task->name}</td>
+					<td></td>
+				</tr>
+			{/foreach}
+		</table>
+	{else}
+		<p>No tasks yet!</p>
+	{/if}
+{/block}
