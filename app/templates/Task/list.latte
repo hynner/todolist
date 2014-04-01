@@ -15,7 +15,14 @@
 					<td>{$task->id_task}</td>
 					<td>{$task->priority}</td>
 					<td>{$task->name}</td>
-					<td></td>
+					<td>
+						<a n:href="Task:edit $task->id_task" title="Edit task">
+							<span class="glyphicon glyphicon-edit"></span>
+						</a>
+						<a n:href="Task:delete $task->id_task" title="Edit task">
+							<span class="glyphicon glyphicon-trash"></span>
+						</a>
+					</td>
 				</tr>
 			{/foreach}
 		</table>
