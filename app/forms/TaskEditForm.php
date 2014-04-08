@@ -10,7 +10,7 @@ class TaskEditForm extends BaseForm
 				->addRule(Form::FILLED, "Task name must be filled!");
 		$this->addSelect("priority", "Priority", array("-1" => "lowest", "0" => "normal", "1" => "highest"));
 		$this->addSelect("color", "Color", array("#FFFFFF","#FF0000", "#00FF00", "#0000FF"));
-		$this->addTextArea("tags", "Tags");
+		$this->addTagBox("tags", "Tags");
 		$this->addTextArea("notes", "Notes");
 		$this->addSubmit("submit", "Save");
 		$this->setDefaults(array("priority" => "0"));

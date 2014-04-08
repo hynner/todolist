@@ -13,7 +13,8 @@ class TaskPresenter extends BasePresenter
 {
 	/** @var string table name */
 	private $table = "tasks";
-	/** @inject 
+	/** 
+	 * @inject 
 	 * @var \Tasks 
 	 */
 	public $tasks;
@@ -26,8 +27,7 @@ class TaskPresenter extends BasePresenter
 	}
 	public function actionEdit($id)
 	{
-		$this->template->task = $this->db->table($this->table)
-				->where("id_task", $id)->fetch();
+		$this->template->task = $this->tasks->get($id);
 		if($this->template->task === false)
 		{
 			$this->flashMessage("Requested task doesn't exists!", "error");
@@ -56,6 +56,14 @@ class TaskPresenter extends BasePresenter
 	{
 		$values = $form->getValues();
 		$succ = $this->tasks->save($values);
+		if($succ)
+		{
+			$this->flashMessage("Task saved!", "success");
+		}
+		else
+		{
+			$this->flashMessage("Error while saving task!", "error");
+		}
 		$this->redirect("list");
 	}
 	
