@@ -48,7 +48,8 @@ class TaskPresenter extends BasePresenter
 		$this->redirect("list");
 	}
 	public function createComponentTaskEditForm() {
-		$form =  new \TaskEditForm();
+		$tags = $this->db->table("tags")->fetchPairs("id_tag", "name");
+		$form =  new \TaskEditForm($tags);
 		$form->onSuccess[] = $this->taskEditFormSubmitted;
 		return $form;
 	}

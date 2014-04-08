@@ -2,7 +2,7 @@
 use \Nette\Forms\Form;
 class TaskEditForm extends BaseForm
 {
-	public function __construct(\Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+	public function __construct($availableTags = array(), \Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct($parent, $name);
 		$this->addHidden("id_task");
@@ -10,7 +10,7 @@ class TaskEditForm extends BaseForm
 				->addRule(Form::FILLED, "Task name must be filled!");
 		$this->addSelect("priority", "Priority", array("-1" => "lowest", "0" => "normal", "1" => "highest"));
 		$this->addSelect("color", "Color", array("#FFFFFF","#FF0000", "#00FF00", "#0000FF"));
-		$this->addTagBox("tags", "Tags");
+		$this->addTagBox("tags", "Tags", array(), $availableTags);
 		$this->addTextArea("notes", "Notes");
 		$this->addSubmit("submit", "Save");
 		$this->setDefaults(array("priority" => "0"));

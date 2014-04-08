@@ -19,9 +19,10 @@ $configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
 $container = $configurator->createContainer();
 \Nette\Forms\Container::extensionMethod("addTagBox", 
-		function(\Nette\Forms\Container $container, $name, $label = NULL, $items = array()){
+		function(\Nette\Forms\Container $container, $name, $label = NULL, $items = array(), $availableTags = array()){
 			$container[$name] = new \TagBox($label);
 			$container[$name]->setValue($items);
+			$container[$name]->setAvailableTags($availableTags);
 			return $container;
 		});
 return $container;

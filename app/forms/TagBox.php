@@ -8,7 +8,8 @@ class TagBox extends Nette\Forms\Controls\BaseControl
 	private $tags = array();
 	/** @var string */
 	private $className = "tagbox";
-	
+	/** @var Array */
+	private $availableTags = array();
 	
 	public function __construct($caption = NULL)
 	{
@@ -29,6 +30,21 @@ class TagBox extends Nette\Forms\Controls\BaseControl
 	{
 		return $this->tags;
 	}
+	public function getAvailableTags()
+	{
+		return $this->availableTags;
+	}
+	public function setAvailableTags($tags)
+	{
+		if(is_array($tags))
+		{
+			$this->availableTags = $tags;
+		}
+		else
+		{
+			$this->availableTags = array();
+		}
+	}
 	public function loadHttpData()
 	{
 		$this->setValue($this->getHttpData(Form::DATA_TEXT, '[]'));
@@ -41,7 +57,12 @@ class TagBox extends Nette\Forms\Controls\BaseControl
 		{
 			$ul->add(Html::el("li")->setText($t));
 		}
-		$control = Html::el()->add($ul);
+		$availTags = Html::el("span")->id($this->getHtmlId()."-avail");
+		foreach($this->availableTags as $t)
+		{
+			$availTags->add(Html::el("span")->setText($t)->class("hidden"));
+		}
+		$control = Html::el()->add($ul)->add($availTags);
 		return $control;
 		
 	}
