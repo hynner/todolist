@@ -1,5 +1,7 @@
 $(function(){
-	$(".tagbox").tagit({
-        fieldName: "tags[]"
+	$(".tagbox").each(function(){
+		$(this).tagit({
+			fieldName: $(this).attr("name") + "[]"
+		});
 	});
 });
