@@ -58,16 +58,29 @@ class Tasks extends Table
 	}
 	public function getTaskList($filter = array())
 	{
-		if(empty($filter["tags"]))
+		$params = array();
+		$where = "";
+		if(!empty($filter["tags"]))
 		{
-			return $this->table->where("id_parent IS NULL")
-				->order("priority ASC, name ASC")->fetchPairs("id_task");
+			$params[] = $filter["tags"];
+			$where .= " AND tags.name IN (?) ";
 		}
-		
+		if(isset($filter["priority"]))
+		{
+			$params[] = $filter["priority"];
+			$where .= " AND tasks.priority = ?";
+		}
+		if(isset($filter["color"]))
+		{
+			$params[] = $filter["color"];
+			$where .= " AND tasks.color = ?";
+		}
 		return $this->db
 				->queryArgs("select tasks.* from tasks join tasks_tags on tasks.id_task = tasks_tags.id_task "
 				. " join tags on tasks_tags.id_tag = tags.id_tag where tasks.id_parent IS NULL "
-				. " AND tags.name IN (?) ORDER BY priority ASC, name ASC", array($filter["tags"]))->fetchPairs("id_task");
+				. $where
+				. "  ORDER BY priority ASC, name ASC", $params)
+				->fetchPairs("id_task");
 		
 	}
 }
