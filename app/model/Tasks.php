@@ -1,18 +1,18 @@
 <?php
 
-class Tasks extends Nette\Object
-{
-	/** @var Nette\Database\Context */
-	private $db;
-	/** @var Nette\Database\Table\Selection */
-	private $table;
-	private $tableName = "tasks";
-	public function __construct(\Nette\Database\Context $db)
+class Tasks extends Table
+{	
+	protected $tableName = "tasks";
+	/** @var \Tags */
+	private $tags;
+	public function injectTags(\Tags $tags)
 	{
-		$this->db = $db;
-		$this->table = $db->table($this->tableName);
+		if($this->tags)
+		{
+			throw new \Nette\InvalidStateException("Tags has already been set!");
+		}
+		$this->tags = $tags;
 	}
-	
 	public function save($values)
 	{
 		$tags = $values["tags"];
@@ -35,8 +35,7 @@ class Tasks extends Nette\Object
 		else
 		{
 			$this->db->queryArgs("delete from tasks_tags where id_tag in (select id_tag from tags where name not in (?)) and id_task = ?", array($tags, $values["id_task"]));
-			$tags_placeholder = str_pad("", (count($tags)-1)*12,"(DEFAULT,?),")."(DEFAULT,?)";
-			$this->db->queryArgs("insert ignore into tags values $tags_placeholder", $tags);
+			$this->tags->insertTags($tags);
 			$this->db->queryArgs("insert ignore into tasks_tags (id_task, id_tag) select ? as id_task, tags.id_tag from tags where name in (?)", array($values["id_task"],$tags));
 		}
 		return true;
@@ -47,19 +46,28 @@ class Tasks extends Nette\Object
 		if($task === false) return false;
 		// get tags
 		$task = $task->toArray();
-		$ret = $this->db->queryArgs("select name from tags join tasks_tags on tasks_tags.id_tag = tags.id_tag where id_task = ?", array($id));
-		$task["tags"] = array();
-		while($n = $ret->fetchField("name"))
-		{
-				$task["tags"][] = $n;			
-		}
+		$task["tags"] = $this->tags->getTagsForTask($task["id_task"]);
 		return $task;
 	}
 	public function delete($id)
 	{
 		$succ = $this->table->where("id_task", $id)->delete() === 1;
-		// delete tags
+		// delete task_tags associations
 		$this->db->table("tasks_tags")->where("id_task", $id)->delete();
 		return $succ;
+	}
+	public function getTaskList($filter = array())
+	{
+		if(empty($filter["tags"]))
+		{
+			return $this->table->where("id_parent IS NULL")
+				->order("priority ASC, name ASC")->fetchPairs("id_task");
+		}
+		
+		return $this->db
+				->queryArgs("select tasks.* from tasks join tasks_tags on tasks.id_task = tasks_tags.id_task "
+				. " join tags on tasks_tags.id_tag = tags.id_tag where tasks.id_parent IS NULL "
+				. " AND tags.name IN (?) ORDER BY priority ASC, name ASC", array($filter["tags"]))->fetchPairs("id_task");
+		
 	}
 }

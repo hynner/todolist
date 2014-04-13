@@ -25,5 +25,9 @@ nette:
 services:
 	- App\Model\UserManager
 	- App\RouterFactory
-	- Tasks
+	- Tags
+	Tasks:
+		class: \Tasks
+		setup:
+			- injectTags
 	router: @App\RouterFactory::createRouter

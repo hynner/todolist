@@ -11,19 +11,41 @@ use Nette,
  */
 class TaskPresenter extends BasePresenter
 {
-	/** @var string table name */
-	private $table = "tasks";
-	/** 
-	 * @inject 
-	 * @var \Tasks 
-	 */
-	public $tasks;
-	
+	/** @var \Tasks */
+	private $tasks = null;
+	/** @var \Tags */
+	private $tags = null;
+	/** @var \Nette\Http\Session\Section */
+	private $session;
+	private $sessionSection = "TaskPresenterSession";
+	public function injectTags(\Tags $tags)
+	{
+		if($this->tags)
+		{
+			throw new \Nette\InvalidStateException("Tags has already been set!");
+		}
+		$this->tags = $tags;
+	}
+	public function injectTasks(\Tasks $tasks)
+	{
+		if($this->tasks)
+		{
+			throw new \Nette\InvalidStateException("Tasks has already been set!");
+		}
+		$this->tasks = $tasks;
+	}
+	public function injectSession(\Nette\Http\Session $session)
+	{
+		if($this->session)
+		{
+			throw new \Nette\InvalidStateException("Session has already been set!");
+		}
+		$this->session = $session->getSection($this->sessionSection);
+		if($this->session->filter === NULL) $this->session->filter = array();
+	}
 	public function actionList()
 	{
-		$this->template->tasks = $this->db->table($this->table)
-				->where("id_parent IS NULL")
-				->order("priority ASC, name ASC")->fetchPairs("id_task");
+		$this->template->tasks = $this->tasks->getTaskList($this->session->filter);
 	}
 	public function actionEdit($id)
 	{
@@ -48,12 +70,26 @@ class TaskPresenter extends BasePresenter
 		$this->redirect("list");
 	}
 	public function createComponentTaskEditForm() {
-		$tags = $this->db->table("tags")->fetchPairs("id_tag", "name");
+		$tags = $this->tags->getAvailableTags();
 		$form =  new \TaskEditForm($tags);
 		$form->onSuccess[] = $this->taskEditFormSubmitted;
 		return $form;
 	}
-	public function taskEditFormSubmitted($form)
+	public function createComponentTaskFilterForm()
+	{
+		$tags = $this->tags->getAvailableTags();
+		$form =  new \TaskFilterForm($tags);
+		$form->setDefaults($this->session->filter);
+		$form->onSuccess[] = $this->taskFilterFormSubmitted;
+		return $form;
+	}
+	public function taskFilterFormSubmitted(\Nette\Forms\Form $form)
+	{
+		$this->session->filter = $form->getValues();
+		$this->redirect("this");
+		
+	}
+	public function taskEditFormSubmitted(\Nette\Forms\Form $form)
 	{
 		$values = $form->getValues();
 		$succ = $this->tasks->save($values);
@@ -67,6 +103,4 @@ class TaskPresenter extends BasePresenter
 		}
 		$this->redirect("list");
 	}
-	
-
 }

@@ -23,6 +23,6 @@ $container = $configurator->createContainer();
 			$container[$name] = new \TagBox($label);
 			$container[$name]->setValue($items);
 			$container[$name]->setAvailableTags($availableTags);
-			return $container;
+			return $container[$name];
 		});
 return $container;

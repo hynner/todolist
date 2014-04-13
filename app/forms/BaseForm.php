@@ -2,6 +2,9 @@
 
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls;
+/**
+ * BaseForm with bootstrap form rendering
+ */
 class BaseForm extends Form {
 
 	public function render()

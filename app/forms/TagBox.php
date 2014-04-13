@@ -10,7 +10,8 @@ class TagBox extends Nette\Forms\Controls\BaseControl
 	private $className = "tagbox";
 	/** @var Array */
 	private $availableTags = array();
-	
+	/** @var bool Filter out non-available tags? */
+	private $availableOnly = false;
 	public function __construct($caption = NULL)
 	{
 		parent::__construct($caption);
@@ -20,11 +21,16 @@ class TagBox extends Nette\Forms\Controls\BaseControl
 		if(is_array($value))
 		{
 			$this->tags = array_unique($value);
+			if($this->availableOnly)
+			{
+				$this->tags = array_intersect($this->tags, $this->availableTags);
+			}
 		}
 		else
 		{
 			$this->tags = array();
 		}
+		return $this;
 	}
 	public function getValue()
 	{
@@ -44,6 +50,12 @@ class TagBox extends Nette\Forms\Controls\BaseControl
 		{
 			$this->availableTags = array();
 		}
+		return $this;
+	}
+	public function setAvailableOnly($b)
+	{
+		$this->availableOnly = boolval($b);
+		return $this;
 	}
 	public function loadHttpData()
 	{

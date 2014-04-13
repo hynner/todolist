@@ -1,6 +1,7 @@
 {block content}
 	<h1>Task list</h1>
 	<a n:href="Task:add" title="New task" class="btn-default btn">New task</a>
+	{control taskFilterForm}
 	{if !empty($tasks)}
 		<table class="table">
 			<caption>Tasks</caption>
