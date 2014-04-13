@@ -76,9 +76,10 @@ class Tasks extends Table
 			$where .= " AND tasks.color = ?";
 		}
 		return $this->db
-				->queryArgs("select tasks.* from tasks join tasks_tags on tasks.id_task = tasks_tags.id_task "
-				. " join tags on tasks_tags.id_tag = tags.id_tag where tasks.id_parent IS NULL "
+				->queryArgs("select tasks.*, group_concat(tags.name) AS tag_list from tasks left join tasks_tags on tasks.id_task = tasks_tags.id_task "
+				. " left join tags on tasks_tags.id_tag = tags.id_tag where tasks.id_parent IS NULL "
 				. $where
+				. " GROUP BY tasks.id_task"
 				. "  ORDER BY priority ASC, name ASC", $params)
 				->fetchPairs("id_task");
 		

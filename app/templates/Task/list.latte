@@ -15,7 +15,14 @@
 				<tr>
 					<td>{$task->id_task}</td>
 					<td>{$task->priority}</td>
-					<td>{$task->name}</td>
+					<td>
+						<div>{$task->name}</div>
+						<div n:if="$task->tag_list !== NULL">
+							{foreach explode(",", $task->tag_list) as $tag}
+								<span class="btn btn-default btn-xs disabled">{$tag}</span>
+							{/foreach}
+						</div>
+					</td>
 					<td>
 						<a n:href="Task:edit $task->id_task" title="Edit task">
 							<span class="glyphicon glyphicon-edit"></span>
