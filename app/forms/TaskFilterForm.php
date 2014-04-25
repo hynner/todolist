@@ -2,13 +2,13 @@
 
 class TaskFilterForm  extends \BaseForm
 {
-	public function __construct($availableTags, \Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
+	public function __construct($priorities=array(),$colors=array(),$availableTags = array(), \Nette\ComponentModel\IContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct($parent, $name);
 		$this->addTagBox("tags", "Tags", array(), $availableTags)
 				->setAvailableOnly(true);
-		$this->addSelect("priority", "Priority", array("-1" => "lowest", "0" => "normal", "1" => "highest"));
-		$this->addSelect("color", "Color", array("#FFFFFF","#FF0000", "#00FF00", "#0000FF"));
+		$this->addSelect("priority", "Priority", $priorities);
+		$this->addSelect("color", "Color", $colors);
 		$this->addSubmit("filter");
 		$this->addSubmit("cancel", "Cancel filter")
 			->setValidationScope(FALSE);

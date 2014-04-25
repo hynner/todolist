@@ -18,6 +18,9 @@ class TaskPresenter extends BasePresenter
 	/** @var \Nette\Http\Session\Section */
 	private $session;
 	private $sessionSection = "TaskPresenterSession";
+	private $priorities = array("0" => "normal", "-1" => "lowest", "1" => "highest");
+	private $colors = array("#FFFFFF" => "#FFFFFF","#FF0000" => "#FF0000",
+		"#00FF00" => "#00FF00", "#0000FF" => "#0000FF");
 	public function injectTags(\Tags $tags)
 	{
 		if($this->tags)
@@ -71,14 +74,14 @@ class TaskPresenter extends BasePresenter
 	}
 	public function createComponentTaskEditForm() {
 		$tags = $this->tags->getAvailableTags();
-		$form =  new \TaskEditForm($tags);
+		$form =  new \TaskEditForm($this->priorities,$this->colors,$tags);
 		$form->onSuccess[] = $this->taskEditFormSubmitted;
 		return $form;
 	}
 	public function createComponentTaskFilterForm()
 	{
 		$tags = $this->tags->getAvailableTags();
-		$form =  new \TaskFilterForm($tags);
+		$form =  new \TaskFilterForm($this->priorities, $this->colors, $tags);
 		$form->setDefaults($this->session->filter);
 		$form->onSuccess[] = $this->taskFilterFormSubmitted;
 		return $form;
