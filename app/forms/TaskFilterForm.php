@@ -7,8 +7,10 @@ class TaskFilterForm  extends \BaseForm
 		parent::__construct($parent, $name);
 		$this->addTagBox("tags", "Tags", array(), $availableTags)
 				->setAvailableOnly(true);
-		$this->addSelect("priority", "Priority", $priorities);
-		$this->addSelect("color", "Color", $colors);
+		$this->addSelect("priority", "Priority", $priorities)
+				->setPrompt("--- Select priority ---");
+		$this->addSelect("color", "Color", $colors)
+				->setPrompt("--- Select color ---");
 		$this->addSubmit("filter");
 		$this->addSubmit("cancel", "Cancel filter")
 			->setValidationScope(FALSE);
