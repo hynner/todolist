@@ -12,7 +12,7 @@
 				<th>Actions</th>
 			</tr>
 			{foreach $tasks as $id => $task}
-				<tr>
+				<tr n:class="'task-'.(($task->finished != 0) ? 'finished' : 'unfinished')">
 					<td>{$task->id_task}</td>
 					<td>{$task->priority}</td>
 					<td>
@@ -24,6 +24,10 @@
 						</div>
 					</td>
 					<td>
+						<a n:href="Task:finish $task->id_task,($task->finished == 0) ? 1 : 0">
+							<span  n:if="$task->finished == 0" class="glyphicon glyphicon-check"></span>
+							<span  n:if="$task->finished != 0" class="glyphicon glyphicon-remove-circle"></span>
+						</a>
 						<a n:href="Task:edit $task->id_task" title="Edit task">
 							<span class="glyphicon glyphicon-edit"></span>
 						</a>

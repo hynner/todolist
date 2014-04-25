@@ -40,6 +40,16 @@ class Tasks extends Table
 		}
 		return true;
 	}
+	/**
+	 * 
+	 * @param int $id
+	 * @param bool $f finished
+	 * @return int
+	 */
+	public function setFinished($id, $f)
+	{
+		return $this->table->where("id_task", $id)->update(array("finished" => (bool) $f));
+	}
 	public function get($id)
 	{
 		$task = $this->table->where("id_task", $id)->fetch();
@@ -77,7 +87,7 @@ class Tasks extends Table
 		}
 		return $this->db
 				->queryArgs("select tasks.*, group_concat(tags.name) AS tag_list from tasks left join tasks_tags on tasks.id_task = tasks_tags.id_task "
-				. " left join tags on tasks_tags.id_tag = tags.id_tag where tasks.id_parent IS NULL "
+				. " left join tags on tasks_tags.id_tag = tags.id_tag where 1 "
 				. $where
 				. " GROUP BY tasks.id_task"
 				. "  ORDER BY priority ASC, name ASC", $params)

@@ -92,6 +92,13 @@ class TaskPresenter extends BasePresenter
 		$this->redirect("this");
 		
 	}
+	public function actionFinish($id, $param)
+	{
+		$ret = $this->tasks->setFinished($id, $param);
+		if($ret == 0) $this->flashMessage ("Task update failed!", "error");
+		else $this->flashMessage ("Task updated!", "success");
+		$this->redirect("list");
+	}
 	public function taskEditFormSubmitted(\Nette\Forms\Form $form)
 	{
 		$values = $form->getValues();
