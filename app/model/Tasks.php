@@ -85,6 +85,11 @@ class Tasks extends Table
 			$params[] = $filter["color"];
 			$where .= " AND tasks.color = ?";
 		}
+		if(isset($filter["finished"]))
+		{
+			$params[] = $filter["finished"];
+			$where .= " AND tasks.finished = ? ";
+		}
 		return $this->db
 				->queryArgs("select tasks.*, group_concat(tags.name) AS tag_list from tasks left join tasks_tags on tasks.id_task = tasks_tags.id_task "
 				. " left join tags on tasks_tags.id_tag = tags.id_tag where 1 "
