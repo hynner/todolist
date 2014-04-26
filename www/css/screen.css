@@ -53,3 +53,12 @@ form .error {
 html.js .jshidden {
 	display: none;
 }
+.task-color
+{
+	width: 15px;
+	height: 15px;
+	float: left;
+	margin: 2px 5px 0 0;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}

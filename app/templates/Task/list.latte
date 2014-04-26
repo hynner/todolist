@@ -17,6 +17,7 @@
 					<td>{$task->id_task}</td>
 					<td>{$task->priority}</td>
 					<td>
+						<div class="task-color" style="background-color: {! $task->color};"></div>
 						<div>{$task->name}</div>
 						<div n:if="$task->tag_list !== NULL">
 							{foreach explode(",", $task->tag_list) as $tag}

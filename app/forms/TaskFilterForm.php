@@ -9,7 +9,7 @@ class TaskFilterForm  extends \BaseForm
 				->setAvailableOnly(true);
 		$this->addSelect("priority", "Priority", $priorities)
 				->setPrompt("--- all ---");
-		$this->addSelect("color", "Color", $colors)
+		$this->addColorSelect("color", "Color", $colors)
 				->setPrompt("--- all ---");
 		$this->addSelect("finished", "Status:", array("0" => "unfinished", "1" => "finished"))
 				->setPrompt("--- all ---");

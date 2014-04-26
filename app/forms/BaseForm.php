@@ -32,7 +32,6 @@ class BaseForm extends Form {
 			}
 			elseif ($control instanceof Controls\TextBase || $control instanceof Controls\SelectBox || $control instanceof Controls\MultiSelectBox)
 			{
-				
 				$control->getControlPrototype()->addClass('form-control');
 			}
 			elseif ($control instanceof Controls\Checkbox || $control instanceof Controls\CheckboxList || $control instanceof Controls\RadioList)

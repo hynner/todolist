@@ -25,4 +25,9 @@ $container = $configurator->createContainer();
 			$container[$name]->setAvailableTags($availableTags);
 			return $container[$name];
 		});
+\Nette\Forms\Container::extensionMethod("addColorSelect", 
+		function(\Nette\Forms\Container $container, $name, $label = NULL, $items = array()){
+			$container[$name] = new \ColorSelectBox($label, $items);
+			return $container[$name];
+		});
 return $container;
