@@ -13,7 +13,7 @@
 				<th>Actions</th>
 			</tr>
 			{foreach $tasks as $id => $task}
-				<tr n:class="'task-'.(($task->finished != 0) ? 'finished' : 'unfinished')">
+				<tr n:class="(($task->finished != 0) ? 'success' : '')">
 					<td>{$task->id_task}</td>
 					<td>{$task->priority}</td>
 					<td>
