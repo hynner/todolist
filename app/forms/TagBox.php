@@ -54,7 +54,7 @@ class TagBox extends Nette\Forms\Controls\BaseControl
 	}
 	public function setAvailableOnly($b)
 	{
-		$this->availableOnly = boolval($b);
+		$this->availableOnly = (bool)$b;
 		return $this;
 	}
 	public function loadHttpData()
