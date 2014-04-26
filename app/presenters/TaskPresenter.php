@@ -21,6 +21,7 @@ class TaskPresenter extends BasePresenter
 	private $priorities = array("0" => "normal", "-1" => "lowest", "1" => "highest");
 	private $colors = array("#FFFFFF" => "#FFFFFF","#FF0000" => "#FF0000",
 		"#00FF00" => "#00FF00", "#0000FF" => "#0000FF");
+	private $tasksPerPage = 20;
 	public function injectTags(\Tags $tags)
 	{
 		if($this->tags)
@@ -48,7 +49,8 @@ class TaskPresenter extends BasePresenter
 	}
 	public function actionList()
 	{
-		$this->template->tasks = $this->tasks->getTaskList($this->session->filter);
+		$vp = $this->getComponent("visualPaginator");
+		$this->template->tasks = $this->tasks->getTaskList($vp->getPaginator(),$this->session->filter);
 	}
 	public function actionEdit($id)
 	{
@@ -85,6 +87,12 @@ class TaskPresenter extends BasePresenter
 		$form->setDefaults($this->session->filter);
 		$form->onSuccess[] = $this->taskFilterFormSubmitted;
 		return $form;
+	}
+	public function createComponentVisualPaginator()
+	{
+		$pg = new \VisualPaginator($this, "visualPaginator");
+		$pg->getPaginator()->setItemsPerPage($this->tasksPerPage);
+		return $pg;
 	}
 	public function taskFilterFormSubmitted(\Nette\Forms\Form $form)
 	{

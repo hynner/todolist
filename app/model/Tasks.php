@@ -66,10 +66,14 @@ class Tasks extends Table
 		$this->db->table("tasks_tags")->where("id_task", $id)->delete();
 		return $succ;
 	}
-	public function getTaskList($filter = array())
+	public function getTaskList(\Nette\Utils\Paginator $pg = NULL, $filter = array())
 	{
 		$params = array();
+		$what = " tasks.*, group_concat(tags.name) AS tag_list ";
 		$where = "";
+		$order = " ORDER BY priority ASC, name ASC ";
+		$group = " GROUP BY tasks.id_task ";
+		$limit = "";
 		if(!empty($filter["tags"]))
 		{
 			$params[] = $filter["tags"];
@@ -90,13 +94,28 @@ class Tasks extends Table
 			$params[] = $filter["finished"];
 			$where .= " AND tasks.finished = ? ";
 		}
-		return $this->db
-				->queryArgs("select tasks.*, group_concat(tags.name) AS tag_list from tasks left join tasks_tags on tasks.id_task = tasks_tags.id_task "
-				. " left join tags on tasks_tags.id_tag = tags.id_tag where 1 "
-				. $where
-				. " GROUP BY tasks.id_task"
-				. "  ORDER BY priority ASC, name ASC", $params)
-				->fetchPairs("id_task");
+		if($pg != NULL)
+		{
+			$row = $this->taskListQuery("COUNT(DISTINCT tasks.id_task) as c", $where, "", "", "", $params)->fetch();
+			if($row !== FALSE)
+			{
+				$pg->setItemCount($row["c"]);
+				$limit = " LIMIT ?,? ";
+				$params[] = $pg->getOffset();
+				$params[] = $pg->getLength();
+			}
+		}
+		return $this->taskListQuery($what, $where, $order, $group, $limit, $params)->fetchPairs("id_task");
 		
+	}
+	private function taskListQuery($what, $where, $order, $group, $limit, $params)
+	{
+		return $this->db
+				->queryArgs("select $what FROM tasks LEFT JOIN tasks_tags ON tasks.id_task = tasks_tags.id_task "
+				. " LEFT JOIN tags ON tasks_tags.id_tag = tags.id_tag WHERE 1 "
+				. " $where" 
+				. " $group "
+				. " $order "
+				. " $limit", $params);
 	}
 }
