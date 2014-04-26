@@ -38,7 +38,7 @@
 <body>
 	<script> document.documentElement.className+=' js' </script>
 
-	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
+	
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -52,8 +52,14 @@
         </div>
       </div>
     </div>
-
     <div class="container">
+		{block pageHeader}{/block}
+		{block flashes}
+			<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type|replace:"error":"danger"} alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				{$flash->message}
+			</div>
+		{/block}
 		{include content}
     </div><!-- /.container -->
 	
